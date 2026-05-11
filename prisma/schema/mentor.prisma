@@ -1,0 +1,17 @@
+model MentorProfile {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  instituteId String
+  title       String?
+  bio         String?
+  expertise   String?
+  avatarUrl   String?
+  createdAt   DateTime @default(now())
+
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  institute InstituteProfile @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  courses   Course[]
+
+  @@index([instituteId])
+  @@map("mentor_profiles")
+}

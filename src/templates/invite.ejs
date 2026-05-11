@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>You're Invited - SkillBridge</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: #f5f7ff; color: #1a1a2e; line-height: 1.6; }
+        .wrapper { width: 100%; background-color: #f5f7ff; padding: 40px 20px; }
+        .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 24px rgba(99,102,241,0.08); border: 1px solid #e8eaf6; }
+        .header { background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 40px; text-align: left; }
+        .header h1 { color: #ffffff; font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+        .header p { color: rgba(255,255,255,0.75); font-size: 13px; margin-top: 4px; }
+        .content { padding: 40px; }
+        .greeting { font-size: 18px; font-weight: 600; margin-bottom: 12px; color: #1a1a2e; }
+        .message { font-size: 15px; color: #555; margin-bottom: 32px; }
+        .cta-button { display: inline-block; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff !important; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; letter-spacing: 0.02em; }
+        .url-box { margin-top: 24px; padding: 16px; background-color: #f5f7ff; border-radius: 6px; border: 1px solid #e8eaf6; }
+        .url-box p { font-size: 12px; color: #888; margin-bottom: 6px; }
+        .url-box a { font-size: 12px; color: #10b981; word-break: break-all; }
+        .expiry { margin-top: 24px; font-size: 13px; color: #999; }
+        .footer { background-color: #f5f7ff; padding: 24px 40px; border-top: 1px solid #e8eaf6; }
+        .footer p { font-size: 11px; color: #aaa; margin-bottom: 4px; }
+        @media (max-width: 600px) {
+            .header { padding: 24px; }
+            .content { padding: 24px; }
+            .footer { padding: 20px 24px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="container">
+            <div class="header">
+                <h1>SkillBridge</h1>
+                <p>Join the Team</p>
+            </div>
+            <div class="content">
+                <div class="greeting">Hi <%= invitedName %>,</div>
+                <p class="message">
+                    You have been invited to join the SkillBridge platform as a <strong><%= roleName %></strong> by <%= inviterName %>. 
+                    Click the button below to accept the invitation and set up your account.
+                </p>
+                <a href="<%= inviteUrl %>" class="cta-button">Accept Invitation</a>
+                <div class="url-box">
+                    <p>Or copy this link into your browser:</p>
+                    <a href="<%= inviteUrl %>"><%= inviteUrl %></a>
+                </div>
+                <p class="expiry">This link expires in 7 days.</p>
+            </div>
+            <div class="footer">
+                <p>© 2026 SkillBridge. All rights reserved.</p>
+                <p>This is an automated email. Please do not reply.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

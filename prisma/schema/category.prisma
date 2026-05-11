@@ -1,0 +1,12 @@
+model Category {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+
+  tutors   TutorProfiles[]
+  subjects Subject[]
+  courses  Course[]
+
+  @@map("categories")
+}

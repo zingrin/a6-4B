@@ -1,0 +1,10 @@
+model TutorSubject {
+  tutorId   String
+  subjectId String
+
+  tutor   TutorProfiles @relation(fields: [tutorId], references: [id])
+  subject Subject       @relation(fields: [subjectId], references: [id])
+
+  @@id([tutorId, subjectId])
+  @@map("tutor_subjects")
+}

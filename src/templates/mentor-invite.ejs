@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>You're Invited as a Mentor - SkillBridge</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: #f5f7ff; color: #1a1a2e; line-height: 1.6; }
+        .wrapper { width: 100%; background-color: #f5f7ff; padding: 40px 20px; }
+        .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 24px rgba(99,102,241,0.08); border: 1px solid #e8eaf6; }
+        .header { background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); padding: 48px 40px 40px; }
+        .header h1 { color: #ffffff; font-size: 30px; font-weight: 700; line-height: 1.2; margin-bottom: 8px; }
+        .header p { color: rgba(255,255,255,0.75); font-size: 14px; }
+        .content { padding: 40px; }
+        .greeting { font-size: 18px; font-weight: 600; margin-bottom: 12px; color: #1a1a2e; }
+        .message { font-size: 15px; color: #555; margin-bottom: 32px; }
+        .invite-card { background-color: #f5f7ff; padding: 24px; border-radius: 6px; border-left: 4px solid #6366f1; margin-bottom: 32px; }
+        .invite-card h2 { font-size: 18px; color: #4f46e5; margin-bottom: 16px; }
+        .detail-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; }
+        .detail-label { color: #777; }
+        .detail-value { font-weight: 600; color: #1a1a2e; }
+        .cta-button { display: inline-block; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: #ffffff !important; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; }
+        .note { margin-top: 24px; padding: 16px; background-color: #fffbeb; border-radius: 6px; border: 1px solid #fef3c7; font-size: 13px; color: #92400e; }
+        .footer { background-color: #f5f7ff; padding: 24px 40px; border-top: 1px solid #e8eaf6; }
+        .footer p { font-size: 11px; color: #aaa; margin-bottom: 4px; }
+        @media (max-width: 600px) {
+            .header { padding: 32px 24px; }
+            .content { padding: 24px; }
+            .detail-row { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="container">
+            <div class="header">
+                <h1>You've Been Invited<br/>as a Mentor.</h1>
+                <p>SkillBridge · Learn. Teach. Grow.</p>
+            </div>
+            <div class="content">
+                <div class="greeting">Hey <%= mentorName %>,</div>
+                <p class="message">
+                    <strong><%= instituteName %></strong> has invited you to join SkillBridge as a Mentor. You'll be able to teach courses, manage your class roster, and make a real impact on students.
+                </p>
+                <div class="invite-card">
+                    <h2><%= instituteName %></h2>
+                    <div class="detail-row">
+                        <span class="detail-label">Your Role:</span>
+                        <span class="detail-value">Mentor / Instructor</span>
+                    </div>
+                    <% if (courseTitle) { %>
+                    <div class="detail-row">
+                        <span class="detail-label">Assigned Course:</span>
+                        <span class="detail-value"><%= courseTitle %></span>
+                    </div>
+                    <% } %>
+                </div>
+                <a href="<%= acceptUrl %>" class="cta-button">Accept Invitation & Set Up Account</a>
+                <div class="note">
+                    ⏳ This invitation link expires in <strong>48 hours</strong>. If you didn't expect this email, please ignore it.
+                </div>
+            </div>
+            <div class="footer">
+                <p>© 2026 SkillBridge. All rights reserved.</p>
+                <p>This invitation was sent on behalf of <%= instituteName %>.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

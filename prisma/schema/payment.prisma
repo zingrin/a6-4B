@@ -1,0 +1,37 @@
+model Payment {
+  id            String         @id @default(uuid())
+  status        PaymentStatus  @default(PENDING)
+  gateway       PaymentGateway @default(STRIPE)
+  amount        Float
+  currency      String         @default("USD")
+  transactionId String?        @unique
+  gatewayRef    String?
+  metadata      Json?
+
+  // Who paid
+  studentId String
+  student   User   @relation(fields: [studentId], references: [id])
+
+  // What they paid for — either a 1-on-1 booking OR a course enrollment
+  bookingId          String?           @unique
+  booking            Booking?          @relation(fields: [bookingId], references: [id])
+  courseEnrollmentId String?           @unique
+  courseEnrollment   CourseEnrollment? @relation(fields: [courseEnrollmentId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([studentId])
+  @@map("payments")
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum PaymentGateway {
+  STRIPE
+}
