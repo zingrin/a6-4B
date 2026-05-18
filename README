@@ -2,98 +2,162 @@
 
 ## Project Overview
 
-SkillBridge Backend is a scalable RESTful API powering the SkillBridge tutor booking platform.
-It manages authentication, role-based access control, tutor profiles, availability scheduling, bookings, reviews, and administrative operations.
+SkillBridge Backend is a scalable, secure, and production-ready RESTful API designed to power the complete SkillBridge tutor booking platform.
 
-The backend is designed to support a complete learning ecosystem where students can connect with tutors through a secure and structured booking system.
+This backend manages the entire application workflow including authentication, authorization, tutor profile management, tutor availability scheduling, booking systems, review management, administrative controls, analytics, and platform moderation.
 
-The platform supports three core roles:
+The platform is built to support a modern learning ecosystem where students can easily connect with tutors through a secure and structured session booking system.
 
-Student — books tutoring sessions, manages bookings, and submits reviews
-Tutor — manages tutor profile, subjects, and availability schedules
-Admin — manages platform users, categories, featured tutors, and analytics
+SkillBridge focuses on creating a seamless experience for learners and educators by providing robust APIs for managing users, tutors, subjects, schedules, bookings, and reviews.
 
-## Tech Stack
+The system is designed with scalability, maintainability, and clean architecture principles in mind, making it suitable for real-world educational platforms and future feature expansion.
 
-- **Node.js**
-- **Express.js**
-- **PostgreSQL**
-- **Prisma ORM**
-- **Better Auth** (authentication & session handling)
-- **REST API architecture**
+The platform supports three primary user roles:
 
----
+### Student
 
-## Roles & Permissions
+Students can browse tutors, explore subjects, book tutoring sessions, manage their bookings, leave reviews, and maintain their personal profiles.
 
-| Role    | Description                         | Permissions                                                 |
-| ------- | ----------------------------------- | ----------------------------------------------------------- |
-| Student | Learners who book tutoring sessions | Book sessions, view bookings, leave reviews, manage profile |
-| Tutor   | Experts who offer tutoring services | Create/update profile, manage subjects, set availability    |
-| Admin   | Platform moderators                 | Manage users, categories, bookings, and analytics           |
+### Tutor
+
+Tutors can create and manage tutor profiles, add teaching subjects, manage availability schedules, receive bookings, and monitor tutoring activities.
+
+### Admin
+
+Admins manage the entire platform including users, tutor verification, categories, subjects, featured tutors, platform analytics, and moderation tasks.
 
 ---
 
-## 🌐 Base URL
+# Tech Stack
 
-```
+The backend is built using modern backend technologies and follows REST API architecture principles.
+
+* **Node.js**
+* **Express.js**
+* **TypeScript**
+* **PostgreSQL**
+* **Prisma ORM**
+* **Better Auth**
+* **Cloudinary**
+* **Multer**
+* **RESTful API Architecture**
+
+---
+
+# Core Features
+
+* Secure Authentication & Authorization
+* Role-Based Access Control (RBAC)
+* Tutor Profile Management
+* Tutor Subject Management
+* Availability Scheduling System
+* Tutor Booking System
+* Booking Status Management
+* Student Review System
+* Featured Tutors Management
+* Admin Analytics
+* Cloudinary Image Upload
+* File Upload Validation
+* Scalable REST API Structure
+* Error Handling Middleware
+* Environment-Based Configuration
+* Prisma Database ORM Integration
+
+---
+
+# Roles & Permissions
+
+| Role    | Description                         | Permissions                                                                 |
+| ------- | ----------------------------------- | --------------------------------------------------------------------------- |
+| Student | Learners who book tutoring sessions | Book sessions, manage bookings, leave reviews, update profile               |
+| Tutor   | Experts who offer tutoring services | Create tutor profile, manage subjects, manage schedules, handle bookings    |
+| Admin   | Platform moderators                 | Manage users, categories, tutors, analytics, bookings, and moderation tasks |
+
+---
+
+# Base URL
+
+```bash
 http://localhost:5000
 ```
 
 ---
 
-## Authentication
+# Authentication
 
-Authentication is handled using **Better Auth**.
+Authentication and session management are handled using **Better Auth**.
+
+The authentication handler is mounted globally:
 
 ```ts
 app.all("/api/auth/*splat", toNodeHandler(auth));
 ```
 
-Protected routes use role-based middleware:
+Protected routes use custom role-based authorization middleware.
+
+Example:
 
 ```ts
 auth(UserRoles.STUDENT, UserRoles.TUTOR, UserRoles.ADMIN);
 ```
 
----
-
-## 📡 API Routes
-
-### Users
-
-| Method | Endpoint                  | Description             |
-| ------ | ------------------------- | ----------------------- |
-| GET    | /api/user/me              | Get current user        |
-| PUT    | /api/user/update          | Update user profile     |
-| GET    | /api/user/student/stats   | Student dashboard stats |
-| GET    | /api/user/admin/analytics | Admin analytics         |
-| GET    | /api/user/list            | List all users (admin)  |
-| PUT    | /api/user/ban/:userId     | Ban or unban user       |
+This middleware ensures only authorized users can access protected resources based on their assigned roles.
 
 ---
 
-### Tutors
+# API Modules
 
-| Method | Endpoint                        | Description              |
-| ------ | ------------------------------- | ------------------------ |
-| GET    | /api/tutors                     | Get all tutors           |
-| GET    | /api/tutors/:tutorId            | Get tutor by ID          |
-| GET    | /api/tutors/overview            | Tutor dashboard overview |
-| PUT    | /api/tutors/update              | Update tutor profile     |
-| PUT    | /api/tutors/subjects            | Update tutor subjects    |
-| DELETE | /api/tutors/subjects/:subjectId | Delete tutor subject     |
-| PUT    | /api/tutors/feature/:tutorId    | Feature tutor (admin)    |
+The backend is organized into multiple feature-based modules.
+
+* Authentication Module
+* User Module
+* Tutor Module
+* Category Module
+* Subject Module
+* Availability Module
+* Booking Module
+* Review Module
+* Analytics Module
+* File Upload Module
 
 ---
 
-### Categories & Subjects
+# API Routes
+
+## User Routes
+
+| Method | Endpoint                  | Description                        |
+| ------ | ------------------------- | ---------------------------------- |
+| GET    | /api/user/me              | Get authenticated user profile     |
+| PUT    | /api/user/update          | Update authenticated user profile  |
+| GET    | /api/user/student/stats   | Get student dashboard statistics   |
+| GET    | /api/user/admin/analytics | Get admin analytics dashboard data |
+| GET    | /api/user/list            | Get all users (admin only)         |
+| PUT    | /api/user/ban/:userId     | Ban or unban a specific user       |
+
+---
+
+## Tutor Routes
+
+| Method | Endpoint                        | Description                         |
+| ------ | ------------------------------- | ----------------------------------- |
+| GET    | /api/tutors                     | Retrieve all tutors                 |
+| GET    | /api/tutors/:tutorId            | Retrieve tutor details by ID        |
+| GET    | /api/tutors/overview            | Get tutor dashboard overview        |
+| PUT    | /api/tutors/update              | Update tutor profile                |
+| PUT    | /api/tutors/subjects            | Update tutor subjects               |
+| DELETE | /api/tutors/subjects/:subjectId | Remove tutor subject                |
+| PUT    | /api/tutors/feature/:tutorId    | Mark tutor as featured (admin only) |
+
+---
+
+## Category & Subject Routes
 
 | Method | Endpoint                                  | Description             |
 | ------ | ----------------------------------------- | ----------------------- |
-| GET    | /api/categories                           | Get all categories      |
-| POST   | /api/categories/create                    | Create category (admin) |
-| POST   | /api/categories/subject/create            | Create subject (admin)  |
+| GET    | /api/categories                           | Retrieve all categories |
+| POST   | /api/categories/create                    | Create new category     |
+| POST   | /api/categories/subject/create            | Create new subject      |
 | PUT    | /api/categories/update/:categoryId        | Update category         |
 | PUT    | /api/categories/update/subject/:subjectId | Update subject          |
 | DELETE | /api/categories/delete/:categoryId        | Delete category         |
@@ -101,71 +165,123 @@ auth(UserRoles.STUDENT, UserRoles.TUTOR, UserRoles.ADMIN);
 
 ---
 
-### Availability (Tutor)
+## Availability Routes
 
-| Method | Endpoint                                 | Description            |
-| ------ | ---------------------------------------- | ---------------------- |
-| GET    | /api/availability                        | Get tutor availability |
-| POST   | /api/availability/create                 | Create availability    |
-| PUT    | /api/availability/update/:availabilityId | Update availability    |
-| DELETE | /api/availability/delete/:availabilityId | Delete availability    |
-
----
-
-### Bookings
-
-| Method | Endpoint                        | Description              |
-| ------ | ------------------------------- | ------------------------ |
-| GET    | /api/bookings                   | Get bookings             |
-| GET    | /api/bookings/:bookingId        | Get booking by ID        |
-| POST   | /api/bookings/create            | Create booking (student) |
-| PUT    | /api/bookings/update/:bookingId | Update booking status    |
+| Method | Endpoint                                 | Description                  |
+| ------ | ---------------------------------------- | ---------------------------- |
+| GET    | /api/availability                        | Retrieve tutor availability  |
+| POST   | /api/availability/create                 | Create availability schedule |
+| PUT    | /api/availability/update/:availabilityId | Update availability schedule |
+| DELETE | /api/availability/delete/:availabilityId | Delete availability schedule |
 
 ---
 
-### Reviews
+## Booking Routes
 
-| Method | Endpoint                      | Description             |
-| ------ | ----------------------------- | ----------------------- |
-| GET    | /api/reviews                  | Get reviews             |
-| POST   | /api/reviews/create           | Create review (student) |
-| PUT    | /api/reviews/update/:reviewId | Update review           |
-
----
-
-## Booking Status Flow
-
-- **CONFIRMED** → default after booking
-- Tutor can mark booking as **COMPLETED**
-- Student can cancel booking → **CANCELLED**
+| Method | Endpoint                        | Description                     |
+| ------ | ------------------------------- | ------------------------------- |
+| GET    | /api/bookings                   | Retrieve bookings               |
+| GET    | /api/bookings/:bookingId        | Retrieve booking by ID          |
+| POST   | /api/bookings/create            | Create tutoring session booking |
+| PUT    | /api/bookings/update/:bookingId | Update booking status           |
 
 ---
 
-## Installation & Setup
+## Review Routes
 
-### 1. Clone repository
+| Method | Endpoint                      | Description            |
+| ------ | ----------------------------- | ---------------------- |
+| GET    | /api/reviews                  | Retrieve all reviews   |
+| POST   | /api/reviews/create           | Create tutor review    |
+| PUT    | /api/reviews/update/:reviewId | Update existing review |
+
+---
+
+# Booking Status Workflow
+
+The booking system follows a structured workflow to maintain consistency and proper session management.
+
+### CONFIRMED
+
+This is the default status immediately after a student successfully books a tutoring session.
+
+### COMPLETED
+
+Tutors can mark tutoring sessions as completed after the session has finished.
+
+### CANCELLED
+
+Students can cancel a tutoring session before completion.
+
+---
+
+# File Upload System
+
+SkillBridge uses **Multer** and **Cloudinary** for secure image uploads.
+
+Supported image formats:
+
+* JPG
+* JPEG
+* PNG
+* SVG
+* WEBP
+
+Features include:
+
+* MIME type validation
+* Unique filename generation
+* Cloudinary folder organization
+* Automatic resource type detection
+
+---
+
+# Database Management
+
+The application uses **PostgreSQL** as the primary relational database and **Prisma ORM** for database management and querying.
+
+Prisma provides:
+
+* Type-safe database queries
+* Schema-based migrations
+* Better developer experience
+* Optimized query handling
+
+---
+
+# Installation & Setup
+
+## 1. Clone Repository
 
 ```bash
-git clone <your-repo-url>
+git clone <your-repository-url>
 cd skillbridge-backend
 npm install
 ```
 
 ---
 
-### 2. Environment variables
+## 2. Configure Environment Variables
 
-Create a `.env` file:
+Create a `.env` file in the project root directory.
 
 ```env
 DATABASE_URL=postgresql://username:password@localhost:5432/skillbridge
-BETTER_AUTH_SECRET=your_auth_secret
-<!-- ...ohters -->
+
+BETTER_AUTH_SECRET=your_better_auth_secret
+
+BETTER_AUTH_URL=http://localhost:5000
+
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+
+PORT=5000
 ```
 
 ---
 
-### 3. Prisma setup
+## 3. Prisma Migration & Client Generation
 
 ```bash
 npx prisma migrate dev
@@ -174,37 +290,96 @@ npx prisma generate
 
 ---
 
-### 4. Run server
+## 4. Start Development Server
 
 ```bash
 npm run dev
 ```
 
-Server will start at:
+The server will run at:
 
-```
+```bash
 http://localhost:5000
 ```
 
 ---
 
-## Root Endpoint
+# Root Endpoint
+
+## Request
 
 ```http
 GET /
 ```
 
-Response:
+## Response
 
 ```json
-"Welcome to Skillbridge server"
+"Welcome to SkillBridge server"
 ```
 
 ---
 
-## Author
+# Project Architecture
 
-**Zingrin Moi Bawm**
-Full Stack Developer
+The backend follows a modular architecture pattern to ensure scalability and maintainability.
+
+### Structure Includes
+
+* Controllers
+* Services
+* Routes
+* Middlewares
+* Prisma Database Layer
+* Utility Functions
+* Authentication Layer
+* Error Handlers
+* File Upload Configurations
 
 ---
+
+# Error Handling
+
+Centralized error handling middleware is used throughout the application to ensure consistent API responses and easier debugging.
+
+The API returns:
+
+* Proper HTTP status codes
+* Validation errors
+* Authentication errors
+* Authorization errors
+* Database-related errors
+* Server errors
+
+---
+
+# Security Features
+
+* Secure authentication handling
+* Protected routes
+* Role-based authorization
+* File type validation
+* Environment variable protection
+* Database query safety through Prisma ORM
+
+---
+
+# Future Improvements
+
+* Real-time messaging system
+* Video call integration
+* Payment gateway integration
+* Tutor verification workflow
+* Notifications system
+* Advanced analytics dashboard
+* Multi-language support
+* Session recording system
+
+---
+
+# Author
+
+## Zingrin Moi Bawm
+
+Full Stack Developer
+MERN & Full Stack Application Developer
