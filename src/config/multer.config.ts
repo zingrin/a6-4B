@@ -54,10 +54,9 @@ const storage = new CloudinaryStorage({
 
 export const multerUpload = multer({ storage, fileFilter });
 
-// ─── Pre-baked helpers for specific use cases ───────────────────────────────
 
 /** Generic single-file upload for any field name */
-export const uploadSingle = (fieldName: string) =>
+export const uploadSingleFile = (fieldName: string) =>
     multerUpload.single(fieldName);
 
 /** User & Mentor profile photos — field name: "image" */
