@@ -7,10 +7,8 @@ import { sendEmail } from "../../utils/email";
 import type { User } from "../../../generated/prisma/client";
 import paginationSortingHelper from "../../utils/paginationHelper";
 
-// ─── Webhook Handler ─────────────────────────────────────────────────────────
 
 const handleStripeWebhookEvent = async (event: Stripe.Event) => {
-    // Idempotency check — skip already-processed events
     const existingEvent = await prisma.payment.findFirst({
         where: {
             metadata: {
@@ -50,7 +48,7 @@ const handleStripeWebhookEvent = async (event: Stripe.Event) => {
             });
 
             if (!paymentData) {
-                console.error(`⚠️ Payment ${paymentId} not found.`);
+                console.error(` Payment ${paymentId} not found.`);
                 return { message: "Payment not found" };
             }
 
@@ -162,9 +160,6 @@ const handleStripeWebhookEvent = async (event: Stripe.Event) => {
                             },
                         });
 
-                        // We no longer automatically cancel the booking or explicitly release availability 
-                        // as availability is now not locked upfront.
-                        // We also allow users to retry payment later via the UI.
                     });
                 }
             }
@@ -186,7 +181,6 @@ const handleStripeWebhookEvent = async (event: Stripe.Event) => {
     return { message: `Webhook event ${event.id} processed successfully` };
 };
 
-// ─── Create Checkout Session for a Booking ───────────────────────────────────
 
 const createBookingCheckoutSession = async (
     bookingId: string,
@@ -204,7 +198,6 @@ const createBookingCheckoutSession = async (
         throw new Error("Booking not found or access denied.");
     }
 
-    // Find existing payment or create a new one to support payment retries for pending bookings
     let payment = await prisma.payment.findUnique({
         where: { bookingId: booking.id },
     });
@@ -232,7 +225,7 @@ const createBookingCheckoutSession = async (
     const session = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
         mode: "payment",
-        expires_at: Math.floor(Date.now() / 1000) + 35 * 60, // Expire in 35 minutes
+        expires_at: Math.floor(Date.now() / 1000) + 35 * 60, 
         line_items: [
             {
                 price_data: {
@@ -258,7 +251,6 @@ const createBookingCheckoutSession = async (
     return { paymentUrl: session.url };
 };
 
-// ─── Create Checkout Session for a Course Enrollment ─────────────────────────
 
 const createCourseCheckoutSession = async (
     courseId: string,
@@ -311,7 +303,7 @@ const createCourseCheckoutSession = async (
     const session = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
         mode: "payment",
-        expires_at: Math.floor(Date.now() / 1000) + 35 * 60, // Expire in 35 minutes
+        expires_at: Math.floor(Date.now() / 1000) + 35 * 60,
         line_items: [
             {
                 price_data: {
@@ -338,7 +330,6 @@ const createCourseCheckoutSession = async (
     return { paymentUrl: session.url };
 };
 
-// ─── Get My Payments ──────────────────────────────────────────────────────────
 
 const getMyPayments = async (userId: string) => {
     return prisma.payment.findMany({
@@ -360,7 +351,6 @@ const getMyPayments = async (userId: string) => {
     });
 };
 
-// ─── Get Tutor Payments ─────────────────────────────────────────────────────────
 
 const getTutorPayments = async (userId: string) => {
     return prisma.payment.findMany({
@@ -383,7 +373,6 @@ const getTutorPayments = async (userId: string) => {
     });
 };
 
-// ─── Verify Stripe Checkout Session ──────────────────────────────────────────
 
 const verifySession = async (sessionId: string) => {
     try {
