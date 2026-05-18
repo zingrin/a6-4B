@@ -3,7 +3,6 @@ import z from "zod";
 
 export const validateRequest = (zodSchema: z.ZodObject<any>) => {
     return (req: Request, res: Response, next: NextFunction) => {
-        // If data is sent as a JSON string in a 'data' field (common in form-data uploads)
         if (req.body.data) {
             try {
                 req.body = JSON.parse(req.body.data);
@@ -18,7 +17,6 @@ export const validateRequest = (zodSchema: z.ZodObject<any>) => {
             return next(parsedResult.error);
         }
 
-        // Sanitizing and updating req.body
         req.body = parsedResult.data;
 
         next();
