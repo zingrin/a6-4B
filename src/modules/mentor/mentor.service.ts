@@ -8,7 +8,6 @@ const getOverview = async (userId: string) => {
         
         const mentorId = profile.id;
 
-        // ── Stat Counts ──────────────────────────────────────────────
         const totalCourses = await tx.course.count({ 
             where: { mentors: { some: { id: mentorId } } } 
         });
@@ -17,7 +16,6 @@ const getOverview = async (userId: string) => {
             where: { course: { mentors: { some: { id: mentorId } } } }
         });
 
-        // Get avg rating from TutorProfile if it exists (since mentors are also tutors/tutors profiles)
         const tutor = await tx.tutorProfiles.findUnique({
             where: { userId },
             select: { avgRating: true, totalReviews: true }
@@ -25,7 +23,6 @@ const getOverview = async (userId: string) => {
         const avgRating = tutor?.avgRating ? Number(tutor.avgRating) : 0;
         const totalReviews = tutor?.totalReviews ?? 0;
 
-        // ── Courses by Level (Donut Chart) ────────────────────────────
         const levelGroups = await tx.course.groupBy({
             by: ["level"],
             where: { mentors: { some: { id: mentorId } } },
@@ -36,7 +33,6 @@ const getOverview = async (userId: string) => {
             value: g._count._all,
         }));
 
-        // ── Enrollments per Month – last 6 months (Line Chart) ────────
         const sixMonthsAgo = new Date();
         sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 5);
         sixMonthsAgo.setDate(1);
@@ -77,7 +73,6 @@ const getOverview = async (userId: string) => {
             take: 5
         });
 
-        // ── Recent Activity (Last 5 Enrollments) ──────────────────────
         const recentActivity = await tx.courseEnrollment.findMany({
             where: { course: { mentors: { some: { id: mentorId } } } },
             include: {
