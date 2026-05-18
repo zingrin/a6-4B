@@ -2,12 +2,10 @@ import { Router } from "express";
 import { validateRequest } from "../../middlewares/validateRequest";
 import { AIController } from "./ai.controller";
 import { AIValidation } from "./ai.validation";
-import { auth } from "../../lib/auth"; // From better-auth
+import { auth } from "../../lib/auth"; 
 
 const router = Router();
 
-// Custom middleware to optionally parse user or enforce authentication
-// Wait, skillbridge uses better-auth. We can parse the session.
 import type { Request, Response, NextFunction } from "express";
 
 const parseUserOptional = async (req: Request, res: Response, next: NextFunction) => {
@@ -19,7 +17,6 @@ const parseUserOptional = async (req: Request, res: Response, next: NextFunction
             (req as any).user = session.user;
         }
     } catch (error) {
-        // Ignored
     }
     next();
 };

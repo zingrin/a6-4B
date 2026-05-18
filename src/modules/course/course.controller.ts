@@ -68,7 +68,6 @@ const updateCourse = async (req: Request, res: Response, next: NextFunction) => 
     try {
         const instituteId = await getInstituteId(req.user!.id as string);
 
-        // multipart/form-data — all fields arrive as strings; coerce back to correct types.
         const body: any = { ...req.body };
         if (req.file?.path)  body.thumbnailUrl = req.file.path;              // Cloudinary URL
         if (body.price      !== undefined) body.price      = parseFloat(body.price);
