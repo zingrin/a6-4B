@@ -7,14 +7,12 @@ import paginationSortingHelper from "../../utils/paginationHelper";
 
 const getOverview = async (instituteId: string) => {
     return await prisma.$transaction(async (tx) => {
-        // ── Stat Counts ──────────────────────────────────────────────
         const totalMentors = await tx.mentorProfile.count({ where: { instituteId } });
         const totalCourses = await tx.course.count({ where: { instituteId } });
         const totalEnrollments = await tx.courseEnrollment.count({
             where: { course: { instituteId } }
         });
 
-        // Total revenue from COMPLETED payments linked to course enrollments
         const revenueResult = await tx.payment.aggregate({
             where: {
                 status: "COMPLETED",
@@ -24,7 +22,6 @@ const getOverview = async (instituteId: string) => {
         });
         const totalRevenue = revenueResult._sum.amount ?? 0;
 
-        // ── Top 5 Courses by Enrollment (Bar Chart) ───────────────────
         const topCourses = await tx.course.findMany({
             where: { instituteId },
             select: {
@@ -41,7 +38,6 @@ const getOverview = async (instituteId: string) => {
             level: c.level,
         }));
 
-        // ── Courses by Level (Donut Chart) ────────────────────────────
         const levelGroups = await tx.course.groupBy({
             by: ["level"],
             where: { instituteId },
@@ -52,7 +48,6 @@ const getOverview = async (instituteId: string) => {
             value: g._count._all,
         }));
 
-        // ── Courses by Status (Donut Chart) ───────────────────────────
         const publishedCount = await tx.course.count({ where: { instituteId, isPublished: true } });
         const draftCount = await tx.course.count({ where: { instituteId, isPublished: false } });
         const coursesByStatus = [
@@ -60,7 +55,6 @@ const getOverview = async (instituteId: string) => {
             { name: "Draft", value: draftCount },
         ];
 
-        // ── Enrollments per Month – last 6 months (Line Chart) ────────
         const sixMonthsAgo = new Date();
         sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 5);
         sixMonthsAgo.setDate(1);
@@ -74,7 +68,6 @@ const getOverview = async (instituteId: string) => {
             select: { enrolledAt: true }
         });
 
-        // Bucket by "Mon YYYY"
         const monthMap: Record<string, number> = {};
         for (let i = 5; i >= 0; i--) {
             const d = new Date();
@@ -93,7 +86,6 @@ const getOverview = async (instituteId: string) => {
             enrollments: count,
         }));
 
-        // ── Recent Courses ────────────────────────────────────────────
         const recentCourses = await tx.course.findMany({
             where: { instituteId },
             select: {
