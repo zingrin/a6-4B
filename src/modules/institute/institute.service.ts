@@ -254,7 +254,7 @@ const listReviews = async (instituteId: string, query: any) => {
   const { page, limit, skip, sortBy, sortOrder } =
     paginationSortingHelper(query);
 
-  // 1. Get all mentors in the institute
+  // 1. Get all mentors institute
   const mentors = await prisma.mentorProfile.findMany({
     where: { instituteId },
     select: { userId: true },
