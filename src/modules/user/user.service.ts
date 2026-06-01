@@ -400,7 +400,7 @@ const inviteModerator = async (email: string, name: string) => {
       id: crypto.randomUUID(),
       identifier: `invite:moderator:${email}`,
       value: token,
-      expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // 7 days
+      expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
     },
   });
 
