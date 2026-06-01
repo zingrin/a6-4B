@@ -165,7 +165,7 @@ const getMyProfile = async (userId: string) => {
 
 const updateProfile = async (userId: string, data: any) => {
   return await prisma.$transaction(async (tx) => {
-    // Update User info if name or avatarUrl is provided
+    // Update User info if name or avatarUrl
     if (data.name || data.avatarUrl) {
       await tx.user.update({
         where: { id: userId },
