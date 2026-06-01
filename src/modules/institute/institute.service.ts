@@ -297,7 +297,7 @@ const listPayments = async (instituteId: string, query: any) => {
   const { page, limit, skip, sortBy, sortOrder } =
     paginationSortingHelper(query);
 
-  // Find payments for all course enrollments belonging to this institute
+  // Find payments for all course enrollments
   const where = { courseEnrollment: { course: { instituteId } } };
 
   const total = await prisma.payment.count({ where });
