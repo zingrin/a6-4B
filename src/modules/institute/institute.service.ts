@@ -261,7 +261,7 @@ const listReviews = async (instituteId: string, query: any) => {
   });
   const mentorUserIds = mentors.map((m) => m.userId);
 
-  // 2. Get TutorProfiles for these mentors
+  // 2. Get TutorProfiles for  mentors
   const tutorProfiles = await prisma.tutorProfiles.findMany({
     where: { userId: { in: mentorUserIds } },
     select: { id: true },
