@@ -202,7 +202,7 @@ const getStudentStats = async (studentId: string) => {
       }),
     );
 
-    // ── Spending Trend – last 6 months (Line Chart) ────────────
+    // Spending Trend – last 6 months
     const sixMonthsAgo = new Date();
     sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 5);
     sixMonthsAgo.setDate(1);
