@@ -181,7 +181,7 @@ const getStudentStats = async (studentId: string) => {
       { name: "Tutoring", value: bookingPaymentSum._sum.amount ?? 0 },
     ];
 
-    // ── Category Distribution (Bar/Donut) ──────────────────────
+    // Category Distribution (Bar/Donut)
     const categoryGroups = await tx.courseEnrollment.findMany({
       where: { studentId, status: "ACTIVE" },
       include: {
