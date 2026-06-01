@@ -241,7 +241,7 @@ const getStudentStats = async (studentId: string) => {
       amount,
     }));
 
-    // ── Recent Enrollments ──────────────────────────────────────
+    // Recent Enrollments
     const recentEnrollments = await tx.courseEnrollment.findMany({
       where: { studentId, status: "ACTIVE" },
       include: {
