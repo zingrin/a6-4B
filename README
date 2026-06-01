@@ -32,36 +32,36 @@ Admins manage the entire platform including users, tutor verification, categorie
 
 The backend is built using modern backend technologies and follows REST API architecture principles.
 
-* **Node.js**
-* **Express.js**
-* **TypeScript**
-* **PostgreSQL**
-* **Prisma ORM**
-* **Better Auth**
-* **Cloudinary**
-* **Multer**
-* **RESTful API Architecture**
+- **Node.js**
+- **Express.js**
+- **TypeScript**
+- **PostgreSQL**
+- **Prisma ORM**
+- **Better Auth**
+- **Cloudinary**
+- **Multer**
+- **RESTful API Architecture**
 
 ---
 
 # Core Features
 
-* Secure Authentication & Authorization
-* Role-Based Access Control (RBAC)
-* Tutor Profile Management
-* Tutor Subject Management
-* Availability Scheduling System
-* Tutor Booking System
-* Booking Status Management
-* Student Review System
-* Featured Tutors Management
-* Admin Analytics
-* Cloudinary Image Upload
-* File Upload Validation
-* Scalable REST API Structure
-* Error Handling Middleware
-* Environment-Based Configuration
-* Prisma Database ORM Integration
+- Secure Authentication & Authorization
+- Role-Based Access Control (RBAC)
+- Tutor Profile Management
+- Tutor Subject Management
+- Availability Scheduling System
+- Tutor Booking System
+- Booking Status Management
+- Student Review System
+- Featured Tutors Management
+- Admin Analytics
+- Cloudinary Image Upload
+- File Upload Validation
+- Scalable REST API Structure
+- Error Handling Middleware
+- Environment-Based Configuration
+- Prisma Database ORM Integration
 
 ---
 
@@ -109,16 +109,16 @@ This middleware ensures only authorized users can access protected resources bas
 
 The backend is organized into multiple feature-based modules.
 
-* Authentication Module
-* User Module
-* Tutor Module
-* Category Module
-* Subject Module
-* Availability Module
-* Booking Module
-* Review Module
-* Analytics Module
-* File Upload Module
+- Authentication Module
+- User Module
+- Tutor Module
+- Category Module
+- Subject Module
+- Availability Module
+- Booking Module
+- Review Module
+- Analytics Module
+- File Upload Module
 
 ---
 
@@ -221,18 +221,18 @@ SkillBridge uses **Multer** and **Cloudinary** for secure image uploads.
 
 Supported image formats:
 
-* JPG
-* JPEG
-* PNG
-* SVG
-* WEBP
+- JPG
+- JPEG
+- PNG
+- SVG
+- WEBP
 
 Features include:
 
-* MIME type validation
-* Unique filename generation
-* Cloudinary folder organization
-* Automatic resource type detection
+- MIME type validation
+- Unique filename generation
+- Cloudinary folder organization
+- Automatic resource type detection
 
 ---
 
@@ -242,10 +242,10 @@ The application uses **PostgreSQL** as the primary relational database and **Pri
 
 Prisma provides:
 
-* Type-safe database queries
-* Schema-based migrations
-* Better developer experience
-* Optimized query handling
+- Type-safe database queries
+- Schema-based migrations
+- Better developer experience
+- Optimized query handling
 
 ---
 
@@ -326,15 +326,15 @@ The backend follows a modular architecture pattern to ensure scalability and mai
 
 ### Structure Includes
 
-* Controllers
-* Services
-* Routes
-* Middlewares
-* Prisma Database Layer
-* Utility Functions
-* Authentication Layer
-* Error Handlers
-* File Upload Configurations
+- Controllers
+- Services
+- Routes
+- Middlewares
+- Prisma Database Layer
+- Utility Functions
+- Authentication Layer
+- Error Handlers
+- File Upload Configurations
 
 ---
 
@@ -344,36 +344,36 @@ Centralized error handling middleware is used throughout the application to ensu
 
 The API returns:
 
-* Proper HTTP status codes
-* Validation errors
-* Authentication errors
-* Authorization errors
-* Database-related errors
-* Server errors
+- Proper HTTP status codes
+- Validation errors
+- Authentication errors
+- Authorization errors
+- Database-related errors
+- Server errors
 
 ---
 
 # Security Features
 
-* Secure authentication handling
-* Protected routes
-* Role-based authorization
-* File type validation
-* Environment variable protection
-* Database query safety through Prisma ORM
+- Secure authentication handling
+- Protected routes
+- Role-based authorization
+- File type validation
+- Environment variable protection
+- Database query safety through Prisma ORM
 
 ---
 
 # Future Improvements
 
-* Real-time messaging system
-* Video call integration
-* Payment gateway integration
-* Tutor verification workflow
-* Notifications system
-* Advanced analytics dashboard
-* Multi-language support
-* Session recording system
+- Real-time messaging system
+- Video call integration
+- Payment gateway integration
+- Tutor verification workflow
+- Notifications system
+- Advanced analytics dashboard
+- Multi-language support
+- Session recording system
 
 ---
 
@@ -382,4 +382,3 @@ The API returns:
 ## Zingrin Moi Bawm
 
 Full Stack Developer
-MERN & Full Stack Application Developer
