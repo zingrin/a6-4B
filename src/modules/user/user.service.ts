@@ -161,7 +161,7 @@ const getStudentStats = async (studentId: string) => {
     });
     const totalSpent = totalSpentResult._sum.amount ?? 0;
 
-    // ── Service Mix (Donut Chart) ───────────────────────────────
+    // Service Mix (Donut Chart)
     // Spending on Courses vs Bookings
     const coursePaymentSum = await tx.payment.aggregate({
       where: {
