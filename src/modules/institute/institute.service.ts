@@ -268,7 +268,7 @@ const listReviews = async (instituteId: string, query: any) => {
   });
   const tutorProfileIds = tutorProfiles.map((t) => t.id);
 
-  // 3. Get reviews for these tutors
+  // 3. Get reviews for tutors
   const where = { tutorId: { in: tutorProfileIds } };
 
   const total = await prisma.review.count({ where });
