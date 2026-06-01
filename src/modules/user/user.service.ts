@@ -154,7 +154,7 @@ const getStudentStats = async (studentId: string) => {
       }),
     ]);
 
-    // ── Total Spent (Sum of all completed payments) ─────────────
+    // Total Spent (Sum of all completed payments)
     const totalSpentResult = await tx.payment.aggregate({
       where: { studentId, status: "COMPLETED" },
       _sum: { amount: true },
