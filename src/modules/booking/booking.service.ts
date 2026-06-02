@@ -15,9 +15,9 @@ const getAllBookings = async (user: User, tutorId: string) => {
       },
       include: {
         tutor: {
-          include : {
-            user : true
-          }
+          include: {
+            user: true,
+          },
         },
         availability: true,
       },
@@ -44,24 +44,24 @@ const getAllBookings = async (user: User, tutorId: string) => {
 
   if (user.role === UserRoles.ADMIN) {
     return prisma.booking.findMany({
-    include: {
+      include: {
         student: {
-          select : {
-            name : true,
-            email : true
-          }
+          select: {
+            name: true,
+            email: true,
+          },
         },
         availability: true,
-        tutor : {
-          include : {
-            user : {
-              select : {
-                name : true,
-                email : true
-              }
-            }
-          }
-        }
+        tutor: {
+          include: {
+            user: {
+              select: {
+                name: true,
+                email: true,
+              },
+            },
+          },
+        },
       },
       orderBy: {
         createdAt: "desc",
@@ -72,24 +72,28 @@ const getAllBookings = async (user: User, tutorId: string) => {
   throw new Error("Unauthorized");
 };
 
-const getBookingById = async (user: User, tutorId: string, bookingId: string) => {
+const getBookingById = async (
+  user: User,
+  tutorId: string,
+  bookingId: string,
+) => {
   if (user.role === UserRoles.STUDENT) {
     return await prisma.booking.findFirst({
       where: {
-        studentId : user.id,
-        id : bookingId
+        studentId: user.id,
+        id: bookingId,
       },
-      include : {
-        student : true,
-        tutor : {
-            include : {
-                user : true
-            }
+      include: {
+        student: true,
+        tutor: {
+          include: {
+            user: true,
+          },
         },
-        subject : true,
-        availability : true,
-        review : true
-      }
+        subject: true,
+        availability: true,
+        review: true,
+      },
     });
   }
 
@@ -97,37 +101,37 @@ const getBookingById = async (user: User, tutorId: string, bookingId: string) =>
     return await prisma.booking.findFirst({
       where: {
         tutorId,
-        id : bookingId
+        id: bookingId,
       },
-    include : {
-        student : true,
-        tutor : {
-            include : {
-                user : true
-            }
+      include: {
+        student: true,
+        tutor: {
+          include: {
+            user: true,
+          },
         },
-        subject : true,
-        availability : true,
-        review : true
-      }
+        subject: true,
+        availability: true,
+        review: true,
+      },
     });
   }
   if (user.role === UserRoles.ADMIN) {
     return await prisma.booking.findFirst({
       where: {
-        id : bookingId
+        id: bookingId,
       },
-      include : {
-        student : true,
-        tutor : {
-            include : {
-                user : true
-            }
+      include: {
+        student: true,
+        tutor: {
+          include: {
+            user: true,
+          },
         },
-        subject : true,
-        availability : true,
-        review : true
-      }
+        subject: true,
+        availability: true,
+        review: true,
+      },
     });
   }
 
@@ -180,6 +184,12 @@ const createBooking = async (data: Booking, studentId: string) => {
   const price = (tutorInfo.hourlyRate as number) * duration;
 
   return prisma.$transaction(async (tx) => {
+    // Mark availability as BOOKED and create booking in a single transaction
+    await tx.availability.update({
+      where: { id: availabilityId as string },
+      data: { status: AvailabilityStatus.BOOKED },
+    });
+
     return await tx.booking.create({
       data: {
         studentId,
@@ -223,24 +233,30 @@ const updateBookingStatus = async (
         throw new Error("You can't change a cancelled booking");
       }
 
-      if (status !== BookingStatus.COMPLETED) {
-        throw new Error("Tutors can only complete bookings");
+      // Tutors can confirm or complete bookings
+      if (
+        status !== BookingStatus.COMPLETED &&
+        status !== BookingStatus.CONFIRMED
+      ) {
+        throw new Error("Tutors can only confirm or complete bookings");
       }
 
       if (booking.tutorId !== tutorId) {
-        throw new Error("Not authorized to complete this booking");
+        throw new Error("Not authorized to change this booking");
       }
     }
   }
 
   return await prisma.$transaction(async (tx) => {
+    // Update availability status based on booking status
+    const availabilityStatusToSet =
+      status === BookingStatus.CONFIRMED
+        ? AvailabilityStatus.BOOKED
+        : AvailabilityStatus.AVAILABLE;
+
     await tx.availability.update({
-      where: {
-        id: booking.availabilityId as string,
-      },
-      data: {
-        status: AvailabilityStatus.AVAILABLE,
-      },
+      where: { id: booking.availabilityId as string },
+      data: { status: availabilityStatusToSet },
     });
 
     return await tx.booking.update({

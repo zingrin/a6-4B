@@ -50,13 +50,29 @@ const getCourseDetails = async (
     const result = await courseService.getCourseDetails(
       req.params.courseId as string,
     );
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Course details retrieved",
-        data: result,
-      });
+    res.status(200).json({
+      success: true,
+      message: "Course details retrieved",
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getTopCourses = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const limit = req.query.limit ? Number(req.query.limit) : 6;
+    const result = await courseService.getTopCourses(limit);
+    res.status(200).json({
+      success: true,
+      message: "Top courses retrieved successfully",
+      data: result,
+    });
   } catch (error) {
     next(error);
   }
@@ -73,13 +89,11 @@ const getInstituteCourses = async (
       instituteId,
       req.query,
     );
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Institute courses retrieved",
-        data: result,
-      });
+    res.status(200).json({
+      success: true,
+      message: "Institute courses retrieved",
+      data: result,
+    });
   } catch (error) {
     next(error);
   }
@@ -105,13 +119,11 @@ const createCourse = async (
     }
 
     const result = await courseService.createCourse(instituteId, body);
-    res
-      .status(201)
-      .json({
-        success: true,
-        message: "Course created successfully",
-        data: result,
-      });
+    res.status(201).json({
+      success: true,
+      message: "Course created successfully",
+      data: result,
+    });
   } catch (error) {
     next(error);
   }
@@ -141,13 +153,11 @@ const updateCourse = async (
       req.params.courseId as string,
       body,
     );
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Course updated successfully",
-        data: result,
-      });
+    res.status(200).json({
+      success: true,
+      message: "Course updated successfully",
+      data: result,
+    });
   } catch (error) {
     next(error);
   }
@@ -164,13 +174,11 @@ const deleteCourse = async (
       instituteId,
       req.params.courseId as string,
     );
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Course deleted successfully",
-        data: result,
-      });
+    res.status(200).json({
+      success: true,
+      message: "Course deleted successfully",
+      data: result,
+    });
   } catch (error) {
     next(error);
   }
@@ -184,13 +192,11 @@ const getAssignedCourses = async (
   try {
     const mentorId = await getMentorId(req.user!.id as string);
     const result = await courseService.getAssignedCourses(mentorId, req.query);
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Assigned courses retrieved",
-        data: result,
-      });
+    res.status(200).json({
+      success: true,
+      message: "Assigned courses retrieved",
+      data: result,
+    });
   } catch (error) {
     next(error);
   }
@@ -208,13 +214,11 @@ const getCourseRoster = async (
       req.params.courseId as string,
       req.query,
     );
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Course roster retrieved",
-        data: result,
-      });
+    res.status(200).json({
+      success: true,
+      message: "Course roster retrieved",
+      data: result,
+    });
   } catch (error) {
     next(error);
   }
@@ -230,13 +234,11 @@ const getEnrolledCourses = async (
       req.user!.id as string,
       req.query,
     );
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Enrolled courses retrieved",
-        data: result,
-      });
+    res.status(200).json({
+      success: true,
+      message: "Enrolled courses retrieved",
+      data: result,
+    });
   } catch (error) {
     next(error);
   }
@@ -248,13 +250,11 @@ const dropCourse = async (req: Request, res: Response, next: NextFunction) => {
       req.user!.id as string,
       req.params.courseId as string,
     );
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Dropped course successfully",
-        data: result,
-      });
+    res.status(200).json({
+      success: true,
+      message: "Dropped course successfully",
+      data: result,
+    });
   } catch (error) {
     next(error);
   }
@@ -262,6 +262,7 @@ const dropCourse = async (req: Request, res: Response, next: NextFunction) => {
 
 export const courseController = {
   getPublicCourses,
+  getTopCourses,
   getCourseDetails,
   getInstituteCourses,
   createCourse,

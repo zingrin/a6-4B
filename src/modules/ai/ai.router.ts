@@ -4,7 +4,7 @@ import { AIController } from "./ai.controller";
 import { AIValidation } from "./ai.validation";
 import { auth } from "../../lib/auth";
 
-const router = Router();
+const router: Router = Router();
 
 import type { Request, Response, NextFunction } from "express";
 
@@ -59,4 +59,4 @@ router.get(
   AIController.getRecommendations,
 );
 
-export const aiRouter = router;
+export { router as aiRouter };
