@@ -1,5 +1,5 @@
 import {
-  BookingStatus,
+    BookingStatus,
   UserRoles,
   UserStatus,
   type User,
@@ -119,7 +119,7 @@ const updateUserStatus = async (status: UserStatus, userId: string) => {
 
 const getStudentStats = async (studentId: string) => {
   return await prisma.$transaction(async (tx) => {
-    //  Stat Counts
+    // ── Stat Counts ──────────────────────────────────────────────
     const [
       totalBookings,
       upcomingBookings,
@@ -129,18 +129,16 @@ const getStudentStats = async (studentId: string) => {
     ] = await Promise.all([
       tx.booking.count({ where: { studentId } }),
       tx.booking.findMany({
-        where: {
-          studentId,
-          status: { in: [BookingStatus.CONFIRMED, BookingStatus.PENDING] },
+        where: { 
+            studentId, 
+            status: { in: [BookingStatus.CONFIRMED, BookingStatus.PENDING] } 
         },
         take: 3,
         orderBy: { createdAt: "asc" },
         include: {
           tutor: { include: { user: { select: { name: true, image: true } } } },
           subject: { select: { name: true } },
-          availability: {
-            select: { day: true, startTime: true, endTime: true },
-          },
+          availability: { select: { day: true, startTime: true, endTime: true } },
         },
       }),
       tx.booking.count({
@@ -154,55 +152,49 @@ const getStudentStats = async (studentId: string) => {
       }),
     ]);
 
-    // Total Spent (Sum of all completed payments)
+    // ── Total Spent (Sum of all completed payments) ─────────────
     const totalSpentResult = await tx.payment.aggregate({
       where: { studentId, status: "COMPLETED" },
       _sum: { amount: true },
     });
     const totalSpent = totalSpentResult._sum.amount ?? 0;
 
-    // Service Mix (Donut Chart)
+    // ── Service Mix (Donut Chart) ───────────────────────────────
     // Spending on Courses vs Bookings
     const coursePaymentSum = await tx.payment.aggregate({
-      where: {
-        studentId,
-        status: "COMPLETED",
-        NOT: { courseEnrollmentId: null },
-      },
-      _sum: { amount: true },
+      where: { studentId, status: "COMPLETED", NOT: { courseEnrollmentId: null } },
+      _sum: { amount: true }
     });
     const bookingPaymentSum = await tx.payment.aggregate({
       where: { studentId, status: "COMPLETED", NOT: { bookingId: null } },
-      _sum: { amount: true },
+      _sum: { amount: true }
     });
 
     const serviceMix = [
       { name: "Courses", value: coursePaymentSum._sum.amount ?? 0 },
-      { name: "Tutoring", value: bookingPaymentSum._sum.amount ?? 0 },
+      { name: "Tutoring", value: bookingPaymentSum._sum.amount ?? 0 }
     ];
 
-    // Category Distribution (Bar/Donut)
+    // ── Category Distribution (Bar/Donut) ──────────────────────
     const categoryGroups = await tx.courseEnrollment.findMany({
       where: { studentId, status: "ACTIVE" },
       include: {
-        course: { include: { category: true } },
-      },
+        course: { include: { category: true } }
+      }
     });
 
     const categoryMap: Record<string, number> = {};
-    categoryGroups.forEach((enrollment) => {
+    categoryGroups.forEach(enrollment => {
       const catName = enrollment.course.category?.name || "Other";
       categoryMap[catName] = (categoryMap[catName] || 0) + 1;
     });
 
-    const categoryDistribution = Object.entries(categoryMap).map(
-      ([name, value]) => ({
-        name,
-        value,
-      }),
-    );
+    const categoryDistribution = Object.entries(categoryMap).map(([name, value]) => ({
+      name,
+      value
+    }));
 
-    // Spending Trend – last 6 months
+    // ── Spending Trend – last 6 months (Line Chart) ────────────
     const sixMonthsAgo = new Date();
     sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 5);
     sixMonthsAgo.setDate(1);
@@ -212,26 +204,20 @@ const getStudentStats = async (studentId: string) => {
       where: {
         studentId,
         status: "COMPLETED",
-        createdAt: { gte: sixMonthsAgo },
+        createdAt: { gte: sixMonthsAgo }
       },
-      select: { amount: true, createdAt: true },
+      select: { amount: true, createdAt: true }
     });
 
     const monthMap: Record<string, number> = {};
     for (let i = 5; i >= 0; i--) {
       const d = new Date();
       d.setMonth(d.getMonth() - i);
-      const key = d.toLocaleDateString("en-US", {
-        month: "short",
-        year: "numeric",
-      });
+      const key = d.toLocaleDateString("en-US", { month: "short", year: "numeric" });
       monthMap[key] = 0;
     }
     for (const p of recentPayments) {
-      const key = new Date(p.createdAt).toLocaleDateString("en-US", {
-        month: "short",
-        year: "numeric",
-      });
+      const key = new Date(p.createdAt).toLocaleDateString("en-US", { month: "short", year: "numeric" });
       if (monthMap[key] !== undefined) {
         monthMap[key] += p.amount;
       }
@@ -241,19 +227,19 @@ const getStudentStats = async (studentId: string) => {
       amount,
     }));
 
-    // Recent Enrollments
+    // ── Recent Enrollments ──────────────────────────────────────
     const recentEnrollments = await tx.courseEnrollment.findMany({
       where: { studentId, status: "ACTIVE" },
       include: {
         course: {
           include: {
             institute: { select: { name: true } },
-            category: true,
-          },
-        },
+            category: true
+          }
+        }
       },
       orderBy: { enrolledAt: "desc" },
-      take: 4,
+      take: 4
     });
 
     return {
@@ -266,7 +252,7 @@ const getStudentStats = async (studentId: string) => {
       serviceMix,
       categoryDistribution,
       spendingTrend,
-      recentEnrollments,
+      recentEnrollments
     };
   });
 };
@@ -291,40 +277,40 @@ const getAdminAnalytics = async () => {
       allRolesDistribution,
       bookingStatusDistribution,
       monthlyRevenue,
-      monthlyUserGrowth,
+      monthlyUserGrowth
     ] = await Promise.all([
       tx.user.count(),
-      tx.user.count({ where: { role: "STUDENT" } }),
-      tx.user.count({ where: { role: "TUTOR" } }),
-      tx.user.count({ where: { role: "INSTITUTE" } }),
+      tx.user.count({ where: { role: 'STUDENT' } }),
+      tx.user.count({ where: { role: 'TUTOR' } }),
+      tx.user.count({ where: { role: 'INSTITUTE' } }),
       tx.booking.count(),
-      tx.booking.count({ where: { status: "COMPLETED" } }),
+      tx.booking.count({ where: { status: 'COMPLETED' } }),
       tx.payment.aggregate({
-        where: { status: "COMPLETED" },
-        _sum: { amount: true },
+        where: { status: 'COMPLETED' },
+        _sum: { amount: true }
       }),
       tx.review.count(),
       tx.review.aggregate({ _avg: { rating: true } }),
-
+      
       // Distributions
       tx.user.groupBy({
         by: ["role"],
-        _count: { _all: true },
+        _count: { _all: true }
       }),
       tx.booking.groupBy({
         by: ["status"],
-        _count: { _all: true },
+        _count: { _all: true }
       }),
 
       // Trends
       tx.payment.findMany({
         where: { status: "COMPLETED", createdAt: { gte: sixMonthsAgo } },
-        select: { amount: true, createdAt: true },
+        select: { amount: true, createdAt: true }
       }),
       tx.user.findMany({
         where: { createdAt: { gte: sixMonthsAgo } },
-        select: { role: true, createdAt: true },
-      }),
+        select: { role: true, createdAt: true }
+      })
     ]);
 
     // Format Trends
@@ -332,31 +318,22 @@ const getAdminAnalytics = async () => {
     for (let i = 5; i >= 0; i--) {
       const d = new Date();
       d.setMonth(d.getMonth() - i);
-      const key = d.toLocaleDateString("en-US", {
-        month: "short",
-        year: "numeric",
-      });
+      const key = d.toLocaleDateString("en-US", { month: "short", year: "numeric" });
       monthMap[key] = { revenue: 0, signups: 0 };
     }
 
     for (const p of monthlyRevenue) {
-      const key = new Date(p.createdAt).toLocaleDateString("en-US", {
-        month: "short",
-        year: "numeric",
-      });
+      const key = new Date(p.createdAt).toLocaleDateString("en-US", { month: "short", year: "numeric" });
       if (monthMap[key]) monthMap[key].revenue += p.amount;
     }
     for (const u of monthlyUserGrowth) {
-      const key = new Date(u.createdAt).toLocaleDateString("en-US", {
-        month: "short",
-        year: "numeric",
-      });
+      const key = new Date(u.createdAt).toLocaleDateString("en-US", { month: "short", year: "numeric" });
       if (monthMap[key]) monthMap[key].signups += 1;
     }
 
     const platformTrend = Object.entries(monthMap).map(([month, data]) => ({
       month,
-      ...data,
+      ...data
     }));
 
     return {
@@ -369,15 +346,9 @@ const getAdminAnalytics = async () => {
       totalRevenue: totalRevenue._sum.amount || 0,
       totalReviews,
       averageRating: averageRating._avg.rating || 0,
-      roleDistribution: allRolesDistribution.map((r) => ({
-        name: r.role,
-        value: r._count._all,
-      })),
-      bookingDistribution: bookingStatusDistribution.map((b) => ({
-        name: b.status,
-        value: b._count._all,
-      })),
-      platformTrend,
+      roleDistribution: allRolesDistribution.map(r => ({ name: r.role, value: r._count._all })),
+      bookingDistribution: bookingStatusDistribution.map(b => ({ name: b.status, value: b._count._all })),
+      platformTrend
     };
   });
 };
@@ -392,7 +363,7 @@ const inviteModerator = async (email: string, name: string) => {
 
   // Keep a single invite valid for moderation per email
   await prisma.verification.deleteMany({
-    where: { identifier: `invite:moderator:${email}` },
+    where: { identifier: `invite:moderator:${email}` }
   });
 
   await prisma.verification.create({
@@ -400,7 +371,7 @@ const inviteModerator = async (email: string, name: string) => {
       id: crypto.randomUUID(),
       identifier: `invite:moderator:${email}`,
       value: token,
-      expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+      expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // 7 days
     },
   });
 
@@ -428,5 +399,5 @@ export const userService = {
   updateUserData,
   getStudentStats,
   getAdminAnalytics,
-  inviteModerator,
+  inviteModerator
 };

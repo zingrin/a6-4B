@@ -8,7 +8,9 @@ cloudinary.config({
     api_secret: envVars.CLOUDINARY.CLOUDINARY_API_SECRET,
 });
 
-
+/**
+ * Programmatic upload — used when uploading from a buffer (e.g. generated PDF invoices).
+ */
 export const uploadFileToCloudinary = async (
     buffer: Buffer,
     fileName: string
@@ -57,7 +59,9 @@ export const uploadFileToCloudinary = async (
     });
 };
 
-
+/**
+ * Deletes a file from Cloudinary using its secure URL.
+ */
 export const deleteFileFromCloudinary = async (url: string): Promise<void> => {
     try {
         const regex = /\/v\d+\/(.+?)(?:\.[a-zA-Z0-9]+)+$/;
@@ -76,4 +80,5 @@ export const deleteFileFromCloudinary = async (url: string): Promise<void> => {
     }
 };
 
+// Raw Cloudinary instance — used by the Multer storage adapter
 export const cloudinaryInstance = cloudinary;

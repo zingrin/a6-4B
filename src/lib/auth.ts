@@ -10,6 +10,7 @@ export const auth = betterAuth({
     database: prismaAdapter(prisma, {
         provider: "postgresql",
     }), 
+    // trustedOrigins : [process.env.APP_URL!],
   trustedOrigins: async (request) => {
     const origin = request?.headers.get("origin");
 
@@ -23,6 +24,7 @@ export const auth = betterAuth({
       "https://skillbridge-frontend-murex.vercel.app",
     ].filter(Boolean);
 
+    // Check if origin matches allowed origins or Vercel pattern
     if (
       !origin ||
       allowedOrigins.includes(origin) ||
@@ -53,6 +55,7 @@ export const auth = betterAuth({
     emailAndPassword: { 
         enabled: true,
         autoSignIn : false,
+        // requireEmailVerification : true
     },
 
     emailVerification : {
