@@ -13,29 +13,27 @@ async function main() {
 
   console.log(`Found ${tutors.length} tutors.`);
 
-  for (let i = 0; i < tutors.length; i++) {
-    const tutor = tutors[i];
-    const category = categories[i % categories.length];
+  const updatePromises = tutors
+    .map((tutor, i) => {
+      const category = categories[i % categories.length];
+      if (!tutor || !category) return null;
 
-    if (!tutor || !category) continue;
+      return prisma.tutorProfiles.update({
+        where: { id: tutor.id },
+        data: {
+          categoryId: category.id,
+          isFeatured: true,
+          hourlyRate: 25 + i * 5,
+          avgRating: 4.5 + i * 0.1,
+          totalReviews: 5 + i * 3,
+          bio: `Experienced educator specializing in ${category.name}. I help students achieve their goals.`,
+        },
+      });
+    })
+    .filter((p): p is any => p !== null);
 
-    // Update the tutor profile
-    await prisma.tutorProfiles.update({
-      where: { id: tutor.id },
-      data: {
-        categoryId: category.id,
-        isFeatured: true,
-        hourlyRate: 25 + i * 5,
-        avgRating: 4.5 + i * 0.1,
-        totalReviews: 5 + i * 3,
-        bio: `Experienced educator specializing in ${category.name}. I help students achieve their goals.`,
-      },
-    });
-
-    console.log(
-      `Updated tutor ${tutor.user.name} to category ${category.name} and set featured: true`,
-    );
-  }
+  await prisma.$transaction(updatePromises);
+  console.log(`Successfully updated ${updatePromises.length} tutors.`);
 
   await prisma.$disconnect();
 }
